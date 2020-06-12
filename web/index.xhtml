@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>Prime Face</title>
+    </h:head>
+    <h:body>
+
+        <h:form id="formCadastro">
+            <p:panel header="Cadastro de Alunos">  
+                <p:messages id="msgs" />
+            <h:panelGroup id="display">
+                <p:panelGrid columns="2" >
+
+                    <p:outputLabel value="Nome" for="nome" />
+                    <p:inputText id="nome" value="#{alunoMB.aluno.nome}" required="true" label="Nome" />
+                    <p:outputLabel value="Sexo" for="sexo" />
+                    
+                    <h:selectOneRadio id="sexo" value="#{alunoMB.aluno.sexo}" required="true" label="Sexo"> 
+                        <f:selectItem itemValue="M" itemLabel="Masculino"/>    
+                        <f:selectItem itemValue="F" itemLabel="Feminino"/> 
+                    </h:selectOneRadio>
+                    <p:outputLabel value="Data de Nascimento" for="dtNasc" />
+                    <p:calendar  id="dtNasc" value="#{alunoMB.aluno.dataNascimento}" required="true" label="Data de Nascimento" pattern="dd/MM/yyyy">
+                    </p:calendar>   
+
+                </p:panelGrid>
+                <p:commandButton actionListener="#{alunoMB.salvar()}" value="Salvar" update="@form :formLista"/>
+                <p:commandButton value="Cancelar" action="#{alunoMB.limpar}" update="@form" process="@this" />
+            </h:panelGroup>
+            </p:panel>
+        </h:form>
+
+
+        <h:form id="formLista">
+            <p:panel header="Lista de Alunos">  
+            <p:dataTable var="item" value="#{alunoMB.lista}" emptyMessage="Sem regstros">
+                <p:column headerText="Código">
+                    #{item.id}
+                </p:column>
+                <p:column  headerText="Nome" sortBy="#{item.nome}" filterBy="#{item.nome}" filterMatchMode="contains">
+                    #{item.nome}
+                </p:column>
+                <p:column headerText="Data de Nacimento">
+                    #{item.dataNascimentoFormatada}
+                </p:column>     
+                <p:column headerText="Ações">
+                    <p:commandButton action="#{alunoMB.carregarAluno(item)}" value="Editar" update=":formCadastro" />
+                    <p:commandButton action="#{alunoMB.deletar(item)}" value="Excluir" update="@form"/>
+                </p:column> 
+            </p:dataTable>
+
+            <p:commandButton action="#{alunoMB.gerarRelatorio()}" ajax="false" value="Relatório" onclick="this.form.taget = '_blanck'" />
+            </p:panel> 
+        </h:form>
+
+    </h:body>
+</html>
+
